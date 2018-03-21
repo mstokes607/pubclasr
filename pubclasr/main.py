@@ -8,7 +8,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # process the raw text abstract file -> dataframe of abstract texts, titles, and journal info is returned
-filename = '/Users/nathmorissette/miniconda2/envs/pubclasr/pubclasr/pubmed_result.xml'
+filename = '~/pubclasr/data/pubmed_result.xml'
 data = process.processXml(filename)
 
 # id abstracts with pharma companies in abstract affiliations
