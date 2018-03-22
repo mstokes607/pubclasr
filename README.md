@@ -14,4 +14,11 @@ Graph_util module has a function create_edges that takes an organization name al
 ## research question
 To understand how many times the company that I work for (Evidera) collaborated with big pharma companies on research studies during the last 5 years. A collaboration is defined as having the Evidera affiliation listed along with one of the orgs from the list of big pharma. 
 ## the data
+A list of abstracts (in XML file format) containing the affiliation "Evidera" (search string: "Evidera[Affiliation]") was generated using PubMed. The abstracts were filtered to include only those containing Abstract text and a publication date within the last 5 years. The example data file is saved as "pubmed_result.xml". 
+
+Note: only including abstracts that contain Abstract text is important, else the processXml function will not work.
+## code
+def foo():
+    if not bar:
+        return True
 
