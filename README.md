@@ -18,8 +18,48 @@ A list of abstracts (in XML file format) containing the affiliation "Evidera" (s
 
 Note: only including abstracts that contain Abstract text is important, else the processXml function will not work.
 ## code
-    # my crazy function
-    def foo():
-        if not bar:
-            return True
+    # excerpt from main.py
+    from pubclasr import process
+    from pubclasr import graph_util
+
+    # load the raw data
+    filename = '~/pubclasr/pubmed_result.xml'
+    data = process.processXml(filename)
+    
+    # list of big pharma companies
+    pharma_lst = ['pfizer','novartis','roche ','sanofi','merck','gilead','johnson and johnson',
+                  'glaxo', 'takeda', 'astrazeneca', 'bristol-myers']
+    
+    # add big pharma indicators to abstract data and create subset
+    pharma = process.id_abstracts(data, pharma_lst, anyflag=1)
+    subset = pharma[pharma['any']==1]
+    
+    # identify abstracts with 'evidera' affiliation among big pharma subset
+    co_lst = ['evidera']      
+    evi = process.id_abstracts(subset, co_lst, anyflag=0)
+    evi = evi[evi['evidera']==1]
+    
+    # create data for networkx graph
+    evi_data = evi[pharma_lst].sum()
+    evi_edges = graph_util.create_edges('evi', evi_data)
+    
+    def create_graph(node_data, edge_data):
+        G = nx.Graph()
+        G.add_nodes_from(node_data)
+        G.add_weighted_edges_from(edge_data)
+        pos = nx.circular_layout(G, scale=0.05)
+        pos[edge_data[0][0]] = np.array([0, 0]) # puts the consulting company at the center
+
+        # Graph with edge and node labels
+        color_map = list()
+        for node in G.nodes: # color code the consulting group and pharma nodes separately
+            if node == edge_data[0][0] : color_map.append('#ADD8E6')
+            else : color_map.append('#F8F8F8')
+        nx.draw(G,pos, node_size=400, node_color=color_map, with_labels=True, font_size=8)
+        edge_labels=dict([((u,v,),d['weight'])
+             for u,v,d in G.edges(data=True)])
+        nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels, font_size=8)
+        plt.show()
+        
+        create_graph(list(evi_data.index), evi_edges)
 
