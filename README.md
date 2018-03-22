@@ -63,5 +63,5 @@ Note: only including abstracts that contain Abstract text is important, else the
         
     create_graph(list(evi_data.index), evi_edges)
  ## output   
- **figure.** Number of evidera pubs with big pharma (last 5 years)
+ **Figure.** Number of evidera pubs with big pharma (last 5 years)
 ![alt text](https://github.com/mstokes607/pubclasr/blob/master/pubclasr/evi_graph.png)
