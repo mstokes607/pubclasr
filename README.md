@@ -18,6 +18,7 @@ A list of abstracts (in XML file format) containing the affiliation "Evidera" (s
 
 Note: only including abstracts that contain Abstract text is important, else the processXml function will not work.
 ## code
+    # my crazy function
     def foo():
         if not bar:
             return True
