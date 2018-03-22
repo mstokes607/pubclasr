@@ -61,5 +61,4 @@ Note: only including abstracts that contain Abstract text is important, else the
         nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels, font_size=8)
         plt.show()
         
-        create_graph(list(evi_data.index), evi_edges)
-
+    create_graph(list(evi_data.index), evi_edges)
