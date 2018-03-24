@@ -9,7 +9,7 @@ Requires python 2.7 with:
 # functionality
 The processXml function (in process.py) is used to import pubmed abstract data (in XML file format) and return a pandas dataframe with key abstract content such as Title, Journal, Abstract, Authors, and Affiliations extracted into separate variables. The function id_abstracts can take a list of organization names stored as character strings and appends variables to the dataframe of abstracts indicating whether the name was included as an Affiliation.
 
-The function create_edges (in Graph_util.py) takes an organization name along with abstract data processed with id_abstracts to create edge data for a networkx graph indicating how many abstracts contained the org name of interest along with others from the list. Essentially, it tracks the extent to which one organization is collaborating with others on the list.
+The function create_edges (in graph_util.py) takes an organization name along with abstract data processed with id_abstracts to create edge data for a networkx graph indicating how many abstracts contained the org name of interest along with others from the list. Essentially, it tracks the extent to which one organization is collaborating with others on the list.
 # example
 ## research objective
 To calculate the number of times that Evidera (the company I work for) collaborated with big pharma companies on research studies during the last 5 years. A collaboration is defined as having the Evidera affiliation listed along with one of the organizations from the list of big pharma. 
@@ -26,23 +26,28 @@ Note: In order for the processXml function to work, it is important to only incl
     filename = '~/pubclasr/pubmed_result.xml'
     data = process.processXml(filename)
     
-    # list of big pharma companies
-    pharma_lst = ['pfizer','novartis','roche ','sanofi','merck','gilead','johnson and johnson',
-                  'glaxo', 'takeda', 'astrazeneca', 'bristol-myers']
-    
-    # add big pharma indicators to abstract data and create subset
+    # id abstracts with pharma companies in abstract affiliations
+    pharma_lst = ['pfizer','novartis','roche ','sanofi','merck','gilead','johnson and johnson', 'johnson & johnson', 'glaxo', 
+              'gsk', 'takeda', 'astrazeneca', 'bristol-myers']
+              
     pharma = process.id_abstracts(data, pharma_lst, anyflag=1)
     subset = pharma[pharma['any']==1]
-    
-    # identify abstracts with 'evidera' affiliation among big pharma subset
-    co_lst = ['evidera']      
-    evi = process.id_abstracts(subset, co_lst, anyflag=0)
-    evi = evi[evi['evidera']==1]
-    
-    # create data for networkx graph
-    evi_data = evi[pharma_lst].sum()
+
+    # clean up where two vars referenced the same organization
+    condition = (subset['glaxo'] == 1) | (subset['gsk'] == 1)
+    subset['glaxosmithkline'] = np.where(condition, 1, 0) 
+    condition2 = (subset['johnson and johnson'] == 1) | (subset['johnson & johnson'])
+    subset['j&j'] = np.where(condition2, 1, 0) 
+    subset = subset.drop(['glaxo','gsk', 'johnson and johnson', 'johnson & johnson'], axis=1)
+    pharma_lst = [e for e in pharma_lst if e not in ('gsk', 'glaxo', 'johnson and johnson', 'johnson & johnson')]
+    pharma_lst.append('glaxosmithkline')
+    pharma_lst.append('j&j')
+
+    evi_data = subset[pharma_lst].sum()
     evi_edges = graph_util.create_edges('evi', evi_data)
-    
+
+    # Create the Graph data - circular graph with consulting company at the center
+    # Edge weights correspond to number of publications
     def create_graph(node_data, edge_data):
         G = nx.Graph()
         G.add_nodes_from(node_data)
@@ -57,11 +62,11 @@ Note: In order for the processXml function to work, it is important to only incl
             else : color_map.append('#F8F8F8')
         nx.draw(G,pos, node_size=400, node_color=color_map, with_labels=True, font_size=8)
         edge_labels=dict([((u,v,),d['weight'])
-             for u,v,d in G.edges(data=True)])
+                for u,v,d in G.edges(data=True)])
         nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels, font_size=8)
         plt.show()
         
-    create_graph(list(evi_data.index), evi_edges)
+    create_graph(evi_data.index.values, evi_edges)
  ## output   
  **Figure.** Number of evidera pubs with big pharma (last 5 years)
 ![alt text](https://github.com/mstokes607/pubclasr/blob/master/pubclasr/evi_graph.png)
