@@ -8,7 +8,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 # process the raw text abstract file -> dataframe of abstract texts, titles, and journal info is returned
-filename = '/Users/nathmorissette/miniconda2/envs/pubclasr/pubclasr/pubmed_result.xml'
+filename = '~pubclasr/pubclasr/pubmed_result.xml'
 data = process.processXml(filename)
 
 # id abstracts with pharma companies in abstract affiliations
@@ -60,5 +60,5 @@ def create_graph(node_data, edge_data):
     #plt.savefig(output, format='PNG')
     plt.show()
 
-output = '/Users/nathmorissette/miniconda2/envs/pubclasr/pubclasr/evi_graph.png'
+output = '~pubclasr/pubclasr/evi_graph.png'
 create_graph(evi_data.index.values, evi_edges)
