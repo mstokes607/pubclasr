@@ -11,7 +11,7 @@ The processXml function (in process.py) is used to import pubmed abstract data (
 
 The function create_edges (in graph_util.py) takes an organization name along with abstract data processed with id_abstracts to create edge data for a networkx graph indicating how many abstracts contained the org name of interest along with others from the list. Essentially, it tracks the extent to which one organization is collaborating with others on the list.
 # example
-## research objective
+## objective
 To calculate the number of times that Evidera (the company I work for) collaborated with big pharma companies on research studies during the last 5 years. A collaboration is defined as having the Evidera affiliation listed along with one of the organizations from the list of big pharma. 
 ## the data
 A list of abstracts (in XML file format) containing the affiliation "Evidera" (search string: "Evidera[Affiliation]") was generated using PubMed. The abstracts were then filtered to include only those containing Abstract text and a publication date within the last 5 years. The example data file is saved as "pubmed_result.xml". 
