@@ -24,7 +24,7 @@ print '\n'
 # check to see if pharma affiliations were appropriately identified in the abstract data
 # pharma['random'] = np.random.rand(len(pharma))
 # pharma = pharma.sort_values(by=['random'])
-# pharma.to_csv('/Users/nathmorissette/miniconda2/envs/pubclasr/pubclasr/processed.csv', encoding='utf-8')
+# pharma.to_csv('~pubclasr/processed.csv', encoding='utf-8')
 
 # clean up where two vars referenced the same organization
 condition = (subset['glaxo'] == 1) | (subset['gsk'] == 1)
