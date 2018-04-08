@@ -7,9 +7,17 @@ Requires python 2.7 with:
 3. matplotlib
 4. networkx
 # functionality
-The processXml function (in process.py) is used to import pubmed abstract data (in XML file format) and return a pandas dataframe with key abstract content such as Title, Journal, Abstract, Authors, and Affiliations extracted into separate variables. The function id_abstracts can take a list of organization names stored as character strings and appends variables to the dataframe of abstracts indicating whether the name was included as an Affiliation.
+**processXml**(*XML_data*)
 
-The function create_edges (in graph_util.py) takes an organization name along with abstract data processed with id_abstracts to create edge data for a networkx graph indicating how many abstracts contained the org name of interest along with others from the list. Essentially, it tracks the extent to which one organization is collaborating with others on the list.
+Constructs DataFrame from pubmed abstracts in XML file format. Title, journal, abstract text, author, and affiliation information is extracted from the XML tree structure. 
+
+**id_abstracts**(*data, org_lst, anyflag=None*)
+
+Appends variables to a dataframe of pubmed abstracts indicating whether an organization name was included as an affiliation. A list of organization names is passed using the *org_lst* parameter. Setting the optional *anyflag* parameter to 1 will append a variable indicating whether the abstract contained at least one organization from *org_lst*.
+
+**create_edges**(*consultco_name,  pubs_data*) 
+
+Constructs edge data for a NetworkX graph from *pubs_data*, a Series object summarizing the extent to which abstracts from one organization collaborated with others in *org_lst* (see example). The *consultco_name* parameter is a string corresponding to the name of the organization that is the focus of the analysis.
 # example
 ## objective
 To calculate the number of times that Evidera (the company I work for) collaborated with big pharma companies on research studies during the last 5 years. A collaboration is defined as having the Evidera affiliation listed along with one of the organizations from the list of big pharma. 
